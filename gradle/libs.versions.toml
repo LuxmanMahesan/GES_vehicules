@@ -20,7 +20,7 @@ mlkitText = "16.0.0"
 navigationCompose = "2.8.0"
 lifecycle = "2.8.4"
 coroutines = "1.8.1"
-
+kotlinxCoroutinesPlayServices = "1.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +51,8 @@ androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lif
 
 # ✅ AJOUTS — Coroutines
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
+
 
 # ✅ AJOUTS — Room
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
