@@ -7,9 +7,10 @@ import com.ges.vehiclegate.data.local.entity.VehicleEntryEntity
 
 @Database(
     entities = [VehicleEntryEntity::class],
-    version = 1,
+    version = 2, // ✅
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun vehicleEntryDao(): VehicleEntryDao
 }
+

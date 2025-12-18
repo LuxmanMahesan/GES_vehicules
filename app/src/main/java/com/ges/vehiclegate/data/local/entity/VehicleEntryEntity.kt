@@ -15,19 +15,12 @@ import androidx.room.PrimaryKey
 data class VehicleEntryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-
     val plate: String,
     val companyName: String,
-
-    /**
-     * On stocke la destination sous forme String (label) pour rester simple.
-     * (On mappera vers enum Destination côté domain)
-     */
     val destinationLabel: String,
-
     val driverPhone: String?,
     val notes: String?,
-
     val arrivalAt: Long,
-    val exitAt: Long?
+    val exitAt: Long?,
+    val photoPath: String? // ✅ nouveau
 )

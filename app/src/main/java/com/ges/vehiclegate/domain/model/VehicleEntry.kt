@@ -7,6 +7,7 @@ data class VehicleEntry(
     val destination: Destination,
     val driverPhone: String?,
     val notes: String?,
-    val arrivalAt: Long,  // epoch millis
-    val exitAt: Long?     // null tant que pas sorti
+    val arrivalAt: Long,
+    val exitAt: Long?,
+    val photoPath: String? // ✅ nouveau
 )

@@ -20,7 +20,7 @@ object AppModule {
                 context.applicationContext,
                 AppDatabase::class.java,
                 "vehiclegate.db"
-            ).build().also { db = it }
+            ).fallbackToDestructiveMigration().build().also { db = it }
         }
 
     fun provideVehicleRepository(context: Context): VehicleRepository =
