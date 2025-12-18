@@ -54,11 +54,13 @@ fun AddVehicleScreen(
                 showCamera = false
             },
             onError = { t ->
-                // simple: on ferme et on met une erreur
                 showCamera = false
-                // tu peux faire mieux (uiState.error), mais on reste simple
+            },
+            onPlateDetected = { plateDetected ->
+                viewModel.onPlateChange(plateDetected)
             }
         )
+
         return
     }
 
@@ -87,6 +89,8 @@ fun AddVehicleScreen(
                 Text(if (uiState.photoPath == null) "Prendre une photo" else "Reprendre une photo")
             }
 
+
+
             // ✅ Aperçu (si photo)
             uiState.photoPath?.let { path ->
                 val bmp = remember(path) { BitmapFactory.decodeFile(path) }
@@ -100,6 +104,15 @@ fun AddVehicleScreen(
                     )
                 }
             }
+
+            if (uiState.isOcrRunning) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+
+            uiState.ocrInfo?.let {
+                Text(it, style = MaterialTheme.typography.bodyMedium)
+            }
+
 
 
             if (uiState.error != null) {

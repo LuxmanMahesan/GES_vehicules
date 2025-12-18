@@ -13,21 +13,28 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.ges.vehiclegate.feature_ocr.ocr.PlateOcrService
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.camera.core.ImageProxy
+import com.google.mlkit.vision.common.InputImage
+import com.ges.vehiclegate.feature_ocr.ocr.PlateTextParser
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraCapture(
     onClose: () -> Unit,
     onImageCaptured: (String) -> Unit,
-    onError: (Throwable) -> Unit
+    onError: (Throwable) -> Unit,
+    onPlateDetected: (String) -> Unit
+
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     var imageCapture: ImageCapture? by remember { mutableStateOf(null) }
+    val ocrService = remember { PlateOcrService() }
 
     Scaffold(
         topBar = {
@@ -63,6 +70,19 @@ fun CameraCapture(
                             .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                             .build()
 
+
+                        val executor = ContextCompat.getMainExecutor(ctx)
+
+                        val analyzer = ImageAnalysis.Builder()
+                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                            .build()
+                            .also {
+                                it.setAnalyzer(executor) { imageProxy ->
+                                    processFrame(imageProxy, onPlateDetected)
+                                }
+                            }
+
+
                         val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
                         try {
@@ -71,7 +91,8 @@ fun CameraCapture(
                                 lifecycleOwner,
                                 cameraSelector,
                                 preview,
-                                capture
+                                capture,
+                                analyzer
                             )
                             imageCapture = capture
                         } catch (t: Throwable) {
@@ -138,3 +159,36 @@ private fun takePhoto(
         }
     )
 }
+
+@androidx.annotation.OptIn(ExperimentalGetImage::class)
+private fun processFrame(
+    imageProxy: ImageProxy,
+    onPlateDetected: (String) -> Unit
+) {
+    val mediaImage = imageProxy.image
+    if (mediaImage != null) {
+        val rotation = imageProxy.imageInfo.rotationDegrees
+        val image = InputImage.fromMediaImage(mediaImage, rotation)
+
+        // OCR ML Kit
+        val recognizer = com.google.mlkit.vision.text.TextRecognition.getClient(
+            com.google.mlkit.vision.text.latin.TextRecognizerOptions.DEFAULT_OPTIONS
+        )
+
+        recognizer.process(image)
+            .addOnSuccessListener { result ->
+                val rawText = result.text
+                val plate = PlateTextParser.extractBestPlate(rawText)
+                if (plate != null) {
+                    onPlateDetected(plate)
+                }
+            }
+            .addOnCompleteListener {
+                imageProxy.close()
+                recognizer.close()
+            }
+    } else {
+        imageProxy.close()
+    }
+}
+

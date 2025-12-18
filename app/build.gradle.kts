@@ -82,4 +82,6 @@ dependencies {
 // ML Kit OCR
     implementation(libs.mlkit.text.recognition)
 
+    implementation(libs.kotlinx.coroutines.play.services)
+
 }

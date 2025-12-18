@@ -10,9 +10,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
+import com.ges.vehiclegate.feature_ocr.ocr.PlateOcrService
+import com.ges.vehiclegate.feature_ocr.ocr.PlateTextParser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+
+
 class AddVehicleViewModel(
     private val addVehicleEntry: AddVehicleEntryUseCase,
-    private val dateTimeProvider: DateTimeProvider
+    private val dateTimeProvider: DateTimeProvider,
+    private val ocrService: PlateOcrService = PlateOcrService()
+
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddVehicleUiState())
@@ -25,8 +35,17 @@ class AddVehicleViewModel(
     fun onPhoneChange(v: String) = _uiState.update { it.copy(driverPhone = v) }
     fun onNotesChange(v: String) = _uiState.update { it.copy(notes = v) }
 
-    fun onPhotoCaptured(path: String) =
+    fun onPhotoCaptured(path: String) {
         _uiState.update { it.copy(photoPath = path, error = null) }
+        runOcrFromPhoto(path)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        ocrService.close()
+    }
+
+
 
     fun save(onSuccess: () -> Unit) {
         val s = _uiState.value
@@ -66,4 +85,36 @@ class AddVehicleViewModel(
             }
         }
     }
+
+    fun runOcrFromPhoto(path: String) {
+        _uiState.update { it.copy(isOcrRunning = true, ocrInfo = "OCR en cours...", error = null) }
+
+        viewModelScope.launch {
+            try {
+                val rawText = withContext(Dispatchers.Default) {
+                    // reconnaissance ML Kit (suspend) + parsing
+                    ocrService.recognizeTextFromFile(path)
+                }
+
+                val plate = PlateTextParser.extractBestPlate(rawText)
+
+                _uiState.update {
+                    it.copy(
+                        isOcrRunning = false,
+                        plate = plate ?: it.plate, // si OCR échoue, on ne détruit pas la saisie
+                        ocrInfo = if (plate != null) "Plaque détectée: $plate" else "Plaque non détectée, saisie manuelle."
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        isOcrRunning = false,
+                        ocrInfo = null,
+                        error = "OCR erreur: ${e.message ?: "inconnue"}"
+                    )
+                }
+            }
+        }
+    }
+
 }
