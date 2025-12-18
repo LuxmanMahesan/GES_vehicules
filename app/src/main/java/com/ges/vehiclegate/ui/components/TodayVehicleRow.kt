@@ -12,13 +12,20 @@ import java.util.*
 @Composable
 fun TodayVehicleRow(
     entry: VehicleEntry,
+    onRestore: (Long) -> Unit,          // ✅
     modifier: Modifier = Modifier
 ) {
     val fmt = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
     Card(modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(entry.plate, style = MaterialTheme.typography.titleMedium)
                 val status = if (entry.exitAt == null) "SUR SITE" else "SORTI"
                 Text(status, style = MaterialTheme.typography.labelLarge)
@@ -38,6 +45,17 @@ fun TodayVehicleRow(
             }
             if (!entry.notes.isNullOrBlank()) {
                 Text("Note: ${entry.notes}", style = MaterialTheme.typography.bodySmall)
+            }
+
+            // ✅ bouton rétablir uniquement si sorti
+            if (entry.exitAt != null) {
+                Spacer(Modifier.height(6.dp))
+                OutlinedButton(
+                    onClick = { onRestore(entry.id) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Rétablir")
+                }
             }
         }
     }

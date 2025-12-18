@@ -14,6 +14,7 @@ import java.util.*
 fun VehicleRow(
     entry: VehicleEntry,
     onMarkExit: (Long) -> Unit,
+    onEdit: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val fmt = rememberDateFormatter()
@@ -37,8 +38,14 @@ fun VehicleRow(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            Button(onClick = { onMarkExit(entry.id) }) {
-                Text("Sortie")
+            // ✅ boutons en colonne
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = { onMarkExit(entry.id) }) {
+                    Text("Sortie")
+                }
+                OutlinedButton(onClick = { onEdit(entry.id) }) {
+                    Text("Éditer")
+                }
             }
         }
     }

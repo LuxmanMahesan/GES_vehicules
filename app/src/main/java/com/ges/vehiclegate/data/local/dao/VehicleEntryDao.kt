@@ -35,4 +35,8 @@ interface VehicleEntryDao {
 
     @Query("UPDATE vehicle_entries SET exitAt = :exitAt WHERE id = :id")
     suspend fun markExit(id: Long, exitAt: Long)
+
+    @Query("UPDATE vehicle_entries SET exitAt = NULL WHERE id = :id")
+    suspend fun restoreOnSite(id: Long)
+
 }

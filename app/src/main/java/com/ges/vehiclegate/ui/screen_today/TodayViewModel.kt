@@ -3,6 +3,7 @@ package com.ges.vehiclegate.ui.screen_today
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ges.vehiclegate.domain.usecase.GetTodayVehiclesUseCase
+import com.ges.vehiclegate.domain.usecase.RestoreVehicleOnSiteUseCase
 import com.ges.vehiclegate.util.DateTimeProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class TodayViewModel(
     private val getTodayVehicles: GetTodayVehiclesUseCase,
+    private val restoreVehicleOnSite: RestoreVehicleOnSiteUseCase,  // ✅
     private val dateTimeProvider: DateTimeProvider
 ) : ViewModel() {
 
@@ -30,6 +32,16 @@ class TodayViewModel(
                         error = null
                     )
                 }
+            }
+        }
+    }
+
+    fun restore(id: Long) {
+        viewModelScope.launch {
+            try {
+                restoreVehicleOnSite(id)
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message ?: "Erreur rétablir") }
             }
         }
     }

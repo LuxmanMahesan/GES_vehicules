@@ -19,7 +19,8 @@ import com.ges.vehiclegate.ui.components.VehicleRow
 @Composable
 fun HomeScreen(
     onAddVehicle: () -> Unit,
-    onSeeToday: () -> Unit
+    onSeeToday: () -> Unit,
+    onEditVehicle: (Long) -> Unit
 ) {
     val context = LocalContext.current
     val repo = remember { AppModule.provideVehicleRepository(context) }
@@ -80,7 +81,8 @@ fun HomeScreen(
                     items(uiState.vehiclesOnSite, key = { it.id }) { entry ->
                         VehicleRow(
                             entry = entry,
-                            onMarkExit = { id -> viewModel.markExit(id) }
+                            onMarkExit = { id -> viewModel.markExit(id) },
+                            onEdit = { id -> onEditVehicle(id) }
                         )
                     }
                 }

@@ -24,4 +24,16 @@ class VehicleRepositoryImpl(
     override suspend fun markExit(id: Long, exitAt: Long) {
         dao.markExit(id, exitAt)
     }
+
+    override suspend fun getById(id: Long): VehicleEntry? =
+        dao.getById(id)?.toDomain()
+
+    override suspend fun update(entry: VehicleEntry) {
+        dao.update(entry.toEntity())
+    }
+
+    override suspend fun restoreOnSite(id: Long) {
+        dao.restoreOnSite(id)
+    }
+
 }

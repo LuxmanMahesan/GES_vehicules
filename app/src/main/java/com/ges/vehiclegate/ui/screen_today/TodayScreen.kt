@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.ges.vehiclegate.di.AppModule
 import com.ges.vehiclegate.domain.usecase.GetTodayVehiclesUseCase
+import com.ges.vehiclegate.domain.usecase.RestoreVehicleOnSiteUseCase
 import com.ges.vehiclegate.ui.components.TodayVehicleRow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,6 +25,7 @@ fun TodayScreen(
     val viewModel = remember {
         TodayViewModel(
             getTodayVehicles = GetTodayVehiclesUseCase(repo),
+            restoreVehicleOnSite = RestoreVehicleOnSiteUseCase(repo),
             dateTimeProvider = dateTimeProvider
         )
     }
@@ -66,7 +68,10 @@ fun TodayScreen(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(uiState.vehicles, key = { it.id }) { entry ->
-                        TodayVehicleRow(entry = entry)
+                        TodayVehicleRow(
+                            entry = entry,
+                            onRestore = { id -> viewModel.restore(id) }   // ✅
+                        )
                     }
                 }
             }

@@ -9,4 +9,9 @@ interface VehicleRepository {
 
     suspend fun add(entry: VehicleEntry): Long
     suspend fun markExit(id: Long, exitAt: Long)
+    suspend fun getById(id: Long): VehicleEntry?     // ✅
+    suspend fun update(entry: VehicleEntry)
+
+    suspend fun restoreOnSite(id: Long)   // ✅
+
 }
