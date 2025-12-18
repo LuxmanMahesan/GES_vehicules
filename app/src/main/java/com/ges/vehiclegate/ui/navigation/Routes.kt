@@ -1,4 +1,7 @@
 package com.ges.vehiclegate.ui.navigation
 
-class Routes {
+object Routes {
+    const val HOME = "home"
+    const val ADD = "add_vehicle"
+    const val TODAY = "today"
 }

@@ -1,4 +1,27 @@
 package com.ges.vehiclegate.data.repository
 
-class VehicleRepositoryImpl {
+import com.ges.vehiclegate.data.local.dao.VehicleEntryDao
+import com.ges.vehiclegate.data.mapper.toDomain
+import com.ges.vehiclegate.data.mapper.toEntity
+import com.ges.vehiclegate.domain.model.VehicleEntry
+import com.ges.vehiclegate.domain.repository.VehicleRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+class VehicleRepositoryImpl(
+    private val dao: VehicleEntryDao
+) : VehicleRepository {
+
+    override fun observeOnSiteVehicles(): Flow<List<VehicleEntry>> =
+        dao.observeOnSiteVehicles().map { list -> list.map { it.toDomain() } }
+
+    override fun observeTodayVehicles(todayStart: Long, tomorrowStart: Long): Flow<List<VehicleEntry>> =
+        dao.observeVehiclesInRange(todayStart, tomorrowStart).map { list -> list.map { it.toDomain() } }
+
+    override suspend fun add(entry: VehicleEntry): Long =
+        dao.insert(entry.toEntity())
+
+    override suspend fun markExit(id: Long, exitAt: Long) {
+        dao.markExit(id, exitAt)
+    }
 }

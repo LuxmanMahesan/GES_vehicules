@@ -1,4 +1,5 @@
 package com.ges.vehiclegate.ui.screen_today
 
-class TodayUiState {
-}
+data class TodayUiState(
+    val count: Int = 0
+)

@@ -1,4 +1,5 @@
 package com.ges.vehiclegate.ui.screen_home
 
-class HomeUiState {
-}
+data class HomeUiState(
+    val isLoading: Boolean = false
+)

@@ -1,4 +1,5 @@
 package com.ges.vehiclegate.ui.screen_add
 
-class AddVehicleUiState {
-}
+data class AddVehicleUiState(
+    val plate: String = ""
+)
