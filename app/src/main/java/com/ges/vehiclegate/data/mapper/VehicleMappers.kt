@@ -14,7 +14,9 @@ fun VehicleEntryEntity.toDomain(): VehicleEntry =
         notes = notes,
         arrivalAt = arrivalAt,
         exitAt = exitAt,
-        photoPath = photoPath
+        photoPath = photoPath,
+        archive = archive,
+
     )
 
 fun VehicleEntry.toEntity(): VehicleEntryEntity =
@@ -27,5 +29,7 @@ fun VehicleEntry.toEntity(): VehicleEntryEntity =
         notes = notes,
         arrivalAt = arrivalAt,
         exitAt = exitAt,
-        photoPath = photoPath
+        photoPath = photoPath,
+        archive = false
+
     )

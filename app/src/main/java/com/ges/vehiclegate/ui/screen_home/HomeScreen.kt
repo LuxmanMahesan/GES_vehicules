@@ -37,7 +37,7 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("VehicleGate - Accueil") }) },
+        topBar = { TopAppBar(title = { Text("GES - Accueil Vehicules") }) },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onAddVehicle,

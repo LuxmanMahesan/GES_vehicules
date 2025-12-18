@@ -17,12 +17,17 @@ interface VehicleEntryDao {
     @Update
     suspend fun update(entry: VehicleEntryEntity)
 
-    @Query("SELECT * FROM vehicle_entries WHERE exitAt IS NULL ORDER BY arrivalAt DESC")
+    @Query("""
+        SELECT * FROM vehicle_entries
+        WHERE exitAt IS NULL AND archive = 0
+        ORDER BY arrivalAt DESC
+    """)
     fun observeOnSiteVehicles(): Flow<List<VehicleEntryEntity>>
 
     @Query("""
         SELECT * FROM vehicle_entries
         WHERE arrivalAt BETWEEN :startInclusive AND :endExclusive
+        AND archive = 0
         ORDER BY arrivalAt DESC
     """)
     fun observeVehiclesInRange(
@@ -33,10 +38,12 @@ interface VehicleEntryDao {
     @Query("SELECT * FROM vehicle_entries WHERE id = :id LIMIT 1")
     suspend fun getById(id: Long): VehicleEntryEntity?
 
-    @Query("UPDATE vehicle_entries SET exitAt = :exitAt WHERE id = :id")
+    @Query("UPDATE vehicle_entries SET exitAt = :exitAt WHERE id = :id AND archive = 0")
     suspend fun markExit(id: Long, exitAt: Long)
 
-    @Query("UPDATE vehicle_entries SET exitAt = NULL WHERE id = :id")
+    @Query("UPDATE vehicle_entries SET exitAt = NULL WHERE id = :id AND archive = 0")
     suspend fun restoreOnSite(id: Long)
 
+    @Query("UPDATE vehicle_entries SET archive = 1 WHERE archive = 0")
+    suspend fun archiverJournee()
 }

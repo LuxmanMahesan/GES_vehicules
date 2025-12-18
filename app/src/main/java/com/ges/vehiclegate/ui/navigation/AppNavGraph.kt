@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ges.vehiclegate.ui.screen_add.AddVehicleScreen
 import com.ges.vehiclegate.ui.screen_edit.EditVehicleScreen
+import com.ges.vehiclegate.ui.screen_history.HistoryScreen
 import com.ges.vehiclegate.ui.screen_home.HomeScreen
 import com.ges.vehiclegate.ui.screen_today.TodayScreen
 
@@ -36,13 +37,21 @@ fun AppNavGraph(
 
         composable(Routes.TODAY) {
             TodayScreen(
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                navController = navController
             )
         }
+
         composable(Routes.EDIT_WITH_ARG) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toLongOrNull() ?: 0L
             EditVehicleScreen(
                 vehicleId = id,
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.HISTORY) {
+            HistoryScreen(
                 onBack = { navController.popBackStack() }
             )
         }

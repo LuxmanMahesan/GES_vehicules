@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "VehicleGate"
+rootProject.name = "GES-VehicleGate"
 include(":app")

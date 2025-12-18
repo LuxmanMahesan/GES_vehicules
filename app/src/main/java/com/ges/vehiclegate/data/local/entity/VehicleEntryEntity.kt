@@ -22,5 +22,7 @@ data class VehicleEntryEntity(
     val notes: String?,
     val arrivalAt: Long,
     val exitAt: Long?,
-    val photoPath: String? // ✅ nouveau
+    val photoPath: String?, // ✅ nouveau
+    val archive: Boolean = false
+
 )

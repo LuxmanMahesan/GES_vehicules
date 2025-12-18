@@ -4,8 +4,8 @@ enum class Destination(val label: String) {
     ENTREPOT("Entrepôt"),
     ATELIER("Atelier"),
     BUREAUX("Bureaux"),
-    QUAI_A("Quai A"),
-    QUAI_B("Quai B"),
+    BOREAL("Boréal"),
+    RESTAURATION("Restauration"),
     AUTRE("Autre");
 
     companion object {

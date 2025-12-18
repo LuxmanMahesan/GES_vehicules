@@ -7,6 +7,7 @@ object Routes {
 
     const val EDIT = "edit_vehicle"
     const val EDIT_WITH_ARG = "edit_vehicle/{id}"
+    const val HISTORY = "history"
 
     fun editRoute(id: Long) = "$EDIT/$id"
 }

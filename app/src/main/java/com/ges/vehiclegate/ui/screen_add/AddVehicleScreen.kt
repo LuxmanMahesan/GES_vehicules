@@ -125,7 +125,7 @@ fun AddVehicleScreen(
             OutlinedTextField(
                 value = uiState.plate,
                 onValueChange = viewModel::onPlateChange,
-                label = { Text("Plaque (OCR plus tard)") },
+                label = { Text("Plaque ") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )

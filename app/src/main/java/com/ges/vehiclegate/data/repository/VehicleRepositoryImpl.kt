@@ -36,4 +36,9 @@ class VehicleRepositoryImpl(
         dao.restoreOnSite(id)
     }
 
+    override suspend fun archiverJournee() {
+        dao.archiverJournee()
+    }
+
+
 }

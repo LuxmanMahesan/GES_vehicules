@@ -14,4 +14,7 @@ interface VehicleRepository {
 
     suspend fun restoreOnSite(id: Long)   // ✅
 
+    suspend fun archiverJournee()
+
+
 }
