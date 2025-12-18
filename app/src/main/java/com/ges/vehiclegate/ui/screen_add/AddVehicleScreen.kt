@@ -14,6 +14,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.ui.graphics.asImageBitmap
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import com.ges.vehiclegate.feature_ocr.camera.CameraCapture
 
 
@@ -78,8 +80,9 @@ fun AddVehicleScreen(
             modifier = Modifier
                 .padding(padding)
                 .padding(16.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
             OutlinedButton(
